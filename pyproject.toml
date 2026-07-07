@@ -57,21 +57,24 @@ version.raw-options.local_scheme = "no-local-version"
 
 [tool.ruff]
 fix = true
-lint.select = [
+lint.extend-select = [
   "C4",     # flake8-comprehensions
   "E",      # pycodestyle errors
   "EM",     # flake8-errmsg
-  "F",      # pyflakes errors
+  "F",      # pyflakes
   "I",      # isort
   "ICN",    # flake8-import-conventions
   "ISC",    # flake8-implicit-str-concat
   "LOG",    # flake8-logging
+  "PERF",   # perflint
   "PGH",    # pygrep-hooks
   "PIE",    # flake8-pie
   "PT",     # flake8-pytest-style
   "PYI",    # flake8-pyi
   "RUF022", # unsorted-dunder-all
   "RUF100", # unused noqa (yesqa)
+  "S",      # flake8-bandit
+  "TID251", # flake8-tidy-imports: banned-api
   "UP",     # pyupgrade
   "W",      # pycodestyle warnings
   "YTT",    # flake8-2020
@@ -83,9 +86,13 @@ lint.ignore = [
   "E241",   # Multiple spaces after ','
   "PIE790", # flake8-pie: unnecessary-placeholder
 ]
+lint.per-file-ignores."tests/**/*.py" = [
+  "S101", # Asserts allowed in tests
+]
 lint.flake8-import-conventions.aliases.datetime = "dt"
 lint.flake8-import-conventions.banned-from = [ "datetime" ]
 lint.flake8-pytest-style.parametrize-names-type = "csv"
+lint.flake8-tidy-imports.banned-api."typing.TYPE_CHECKING".msg = "Use TYPE_CHECKING = False instead"
 lint.isort.known-first-party = [ "termcolor" ]
 lint.isort.required-imports = [ "from __future__ import annotations" ]
 lint.future-annotations = true
@@ -99,6 +106,8 @@ testpaths = [ "tests" ]
 
 [tool.coverage]
 run.branch = true
+run.core = "sysmon"  # default for 3.14+, available for 3.12+
+run.disable_warnings = [ "no-sysmon" ]  # 3.11 and earlier
 run.omit = [
   "**/__main__.py",
 ]
